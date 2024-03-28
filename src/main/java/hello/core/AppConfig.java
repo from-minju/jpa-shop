@@ -1,6 +1,8 @@
 package hello.core;
 
+import hello.core.discount.DiscountPolicy;
 import hello.core.discount.FixDiscountPolicy;
+import hello.core.member.MemberRepository;
 import hello.core.member.MemberService;
 import hello.core.member.MemberServiceImpl;
 import hello.core.member.MemoryMemberRepository;
@@ -10,16 +12,26 @@ import hello.core.order.OrderServiceImpl;
 public class AppConfig {
 
     /*
-    * 생성자를 통해 의존관계(DI)를 주입해줌.
-    * OrderServiceImpl에는 이제 추상화(인터페이스)만 있음. 어떤 db를,할인정책을 써야할지 이런거 더이상 관여하지 않음.
-    * OrderServiceImpl의 기능(주문생성)만을 실행시키는데 집중. 어떤 db,할인정책인지는 더이상 알 바 아님.
+    * 이전 : AppConfig를 보면 역할과 구현이 한눈에 보이지 않았음. 중복이 있었음.
+    * 리팩어링 후 : 메서드 명을 보는 순간 역할이 드러남. 역할과 구현 클래스가 한눈에 들어옴. 전체구성을 빠르게 파악가능
+    * 중복이 제거됨. ex) memory->jdbc로 나중에 구현체를 바꾼다 했을 때
+    * 이전 코드는 memberService()와 orderService() 모두에게 가서 new MemoryMemberRepository() -> new JdbcMemberRepository()로 바꿔야 했음.
+    * 하지만 리팩터링 이후에는 memberRepository()내부 하나만 바꾸면 됨.
     * */
 
     public MemberService memberService() {
-        return new MemberServiceImpl(new MemoryMemberRepository());
+        return new MemberServiceImpl(memberRepository());
+    }
+
+    private MemberRepository memberRepository() {
+        return new MemoryMemberRepository();
     }
 
     public OrderService orderService() {
-        return new OrderServiceImpl(new MemoryMemberRepository(), new FixDiscountPolicy());
+        return new OrderServiceImpl(memberRepository(), discountPolicy());
+    }
+
+    private DiscountPolicy discountPolicy() {
+        return new FixDiscountPolicy();
     }
 }
