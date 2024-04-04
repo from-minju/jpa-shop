@@ -12,7 +12,7 @@ import hello.core.order.OrderServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@Configuration //App의 설정정보를 담당
+@Configuration //App의 설정정보를 담당
 public class AppConfig {
 
     @Bean //스프링컨테이너에 등록됨.
