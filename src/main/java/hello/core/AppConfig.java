@@ -17,16 +17,19 @@ public class AppConfig {
 
     @Bean //스프링컨테이너에 등록됨.
     public MemberService memberService() {
+        System.out.println("call Appconfig.memberService");
         return new MemberServiceImpl(memberRepository());
     }
 
     @Bean
     public MemberRepository memberRepository() {
+        System.out.println("call Appconfig.memberRepository");
         return new MemoryMemberRepository();
     }
 
     @Bean
     public OrderService orderService() {
+        System.out.println("call Appconfig.orderService");
         return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 
