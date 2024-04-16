@@ -5,6 +5,7 @@ import hello.core.member.Member;
 import org.springframework.stereotype.Component;
 
 //정액 할인 정책 구현체
+@Component
 public class FixDiscountPolicy implements DiscountPolicy{
 
     private int discountFixAmount = 1000; //1,000원 고정 할인
