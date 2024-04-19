@@ -1,6 +1,9 @@
 package hello.core.lifecycle;
 
-public class NetworkClient {
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
+public class NetworkClient implements InitializingBean, DisposableBean {
 
     private String url;
 
@@ -26,4 +29,19 @@ public class NetworkClient {
     public void disconnect() {
         System.out.println("close: " + url);
     }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("NetworkClient.afterPropertiesSet");
+        connect();
+        call("초기화 연결 메시지");
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("NetworkClient.destroy");
+        disconnect();
+    }
 }
+
+//초기화,소멸 인터페이스의 단점 : 스프링 전용 인터페이스!, 스프링에 의존할수밖에없게됨. 거의사용안함. 스프링초창기때만들어진거.
